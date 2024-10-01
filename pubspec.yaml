@@ -1,0 +1,85 @@
+name: sfx
+description: "Home automatization for sfx trading school."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #state management
+  bloc: ^8.1.4
+  equatable: ^2.0.5
+  flutter_bloc: ^8.1.6
+
+  #for routing system:
+  go_router: ^14.2.3
+
+  # for design_system
+  cupertino_icons: ^1.0.6
+  l: ^4.0.2
+  flutter_screenutil: ^5.9.0
+  flutter_svg: ^2.0.10+1
+
+  # for slides
+  carousel_slider: ^5.0.0
+
+  # slider
+  flutter_xlider: ^3.5.0
+
+  #for internet connectivity
+  dio: ^5.4.1
+  connectivity_plus: ^6.0.3
+  internet_connection_checker: ^1.0.0+1
+
+  #for locale storage
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.3
+
+  #for launching url
+  url_launcher: ^6.3.0
+  flutter_launcher_icons: ^0.13.1
+
+  #for entering code
+  pinput: ^5.0.0
+
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  intl_translation: any
+  flutter_intl:
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/actual_logo.png"
+
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/icons/
+    - assets/fonts/
+    - assets/images/
+
+  fonts:
+    - family: TT-Uzum
+      fonts:
+        - asset: assets/fonts/TT-Uzum-ExtraBold.ttf
+        - asset: assets/fonts/TT-Uzum-Bold.ttf
+        - asset: assets/fonts/TT-Uzum-DemiBold.ttf
+        - asset: assets/fonts/TT-Uzum-Regular.ttf
+        - asset: assets/fonts/TT-Uzum-Light.ttf
+
+flutter_intl:
+  enabled: true

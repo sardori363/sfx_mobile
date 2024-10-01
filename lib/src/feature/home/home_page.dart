@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sfx/src/common/routing/app_route_name.dart';
+import 'package:sfx/src/common/styles/app_colors.dart';
+import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
+import 'package:sfx/src/feature/home/homework_details_page.dart';
+import 'package:sfx/src/feature/home/widgets/filter_widget.dart';
+import 'package:sfx/src/feature/home/widgets/stats_widget.dart';
+import 'package:sfx/src/feature/home/widgets/status_widget.dart';
+
+import '../../data/entity/task_model.dart';
+import 'bloc/home_bloc.dart';
+import 'bloc/home_state.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late HomeBloc _homeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _homeBloc = BlocProvider.of<HomeBloc>(context);
+    _homeBloc.add(GetTasksEvent(topicNumber: 4));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ColorScheme contextColor = context.colorScheme;
+    return Scaffold(
+      backgroundColor: contextColor.background,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          "Uy ishlari",
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 20.sp),
+        ),
+      ),
+      body: BlocBuilder<HomeBloc, HomeState>(
+        builder: (context, state) {
+          if(state.pageState == HomePageState.success) {
+            return Padding(
+              padding: EdgeInsets.only(left: 16.w, right: 16.w),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    StatisticsWidget(
+                      completed: state.stats.completedTasks,
+                      left: state.stats.allTasks - state.stats.completedTasks,
+                      given: state.stats.allTasks,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const FilterWidget(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ListView.builder(
+                      itemCount: state.tasksData.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        Task currentTask = state.tasksData[index];
+                        return GestureDetector(
+                          onTap: (){
+                            // context.push(AppRouteName.homeworkDetailsPage);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeWorkDetailsPage(
+                                  currentTask: currentTask,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(bottom: 20.h),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: contextColor.onPrimaryContainer,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId-4].name,
+                                    style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp),
+                                  ),
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 100.h,
+                                  margin: const EdgeInsets.only(top: 6, bottom: 20),
+                                  child: ClipRRect(borderRadius: BorderRadius.circular(6) ,child: Image.network(currentTask.imageUrl, fit: BoxFit.fill,)),
+                                ),
+                                Text(
+                                  currentTask.title,
+                                  style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      truncateText(currentTask.description, limit: 23),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp, fontWeight: FontWeight.w500),
+                                    ),
+                                    StatusWidget(currentTask: currentTask.id, index: index+4,),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          } else if(state.pageState == HomePageState.error){
+            return const Placeholder();
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.green),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+String truncateText(String text, {int limit = 30}) {
+  if (text.length > limit) {
+    return '${text.substring(0, limit)}...';
+  } else {
+    return text;
+  }
+}
+
