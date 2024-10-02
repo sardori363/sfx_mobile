@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:convert";
+import "dart:developer";
 import "dart:io";
 
 import "package:connectivity_plus/connectivity_plus.dart";
@@ -88,6 +89,39 @@ class ApiService {
     return dio;
   }
 
+  static Future<Dio> initDioWithManualHeaders2() async {
+    final Dio dio = Dio(
+      BaseOptions(
+        baseUrl: ApiConst.baseUrl,
+        headers: await ApiService.getHeadersWithTokenAndMultipart(),
+        connectTimeout: ApiConst.connectionTimeout,
+        receiveTimeout: ApiConst.sendTimeout,
+        sendTimeout: ApiConst.sendTimeout,
+        validateStatus: (int? status) => status != null && status < 205,
+      ),
+    );
+
+    dio.interceptors.addAll(
+      <Interceptor>[
+        ConnectivityInterceptor(
+          requestReceiver: Connection(
+            dio: dio,
+            connectivity: Connectivity(),
+          ),
+        ),
+      ],
+    );
+
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
+
+    return dio;
+  }
+
   static Future<Map<String, String>> getHeaders() async {
     final Map<String, String> headers = <String, String>{
       "Content-type": "application/json",
@@ -99,6 +133,27 @@ class ApiService {
   static Future<Map<String, String>> getHeadersWithToken() async {
     Map<String, String> headers = <String, String>{
       "Content-type": "application/json",
+    };
+
+    String? accessToken = await AppStorage.$read(key: StorageKey.accessToken);
+    if (accessToken != null && accessToken.isNotEmpty) {
+      if (isAccessTokenExpired(accessToken)) {
+        try {
+          await refreshAccessToken();
+          accessToken = await AppStorage.$read(key: StorageKey.accessToken);
+        } catch (e) {
+          l.e("Token refresh failed: $e");
+        }
+      }
+      headers.putIfAbsent("authorization", () => "Bearer $accessToken");
+    }
+
+    return headers;
+  }
+
+  static Future<Map<String, String>> getHeadersWithTokenAndMultipart() async {
+    Map<String, String> headers = <String, String>{
+      'Content-Type': 'multipart/form-data',
     };
 
     String? accessToken = await AppStorage.$read(key: StorageKey.accessToken);
@@ -169,6 +224,27 @@ class ApiService {
       l.e(e.response.toString());
       rethrow;
     } on Object catch (_) {
+      rethrow;
+    }
+  }
+
+  static Future<String?> postTask(String api, FormData data,
+      [Map<String, dynamic> params = const <String, dynamic>{}]) async {
+    try {
+      final Response<dynamic> response =
+      await (await initDioWithManualHeaders2()).post<dynamic>(
+        api,
+        data: data,
+      );
+      return jsonEncode(response.data);
+    } on TimeoutException catch (_) {
+      l.e("The connection has timed out, Please try again!");
+      rethrow;
+    } on DioError catch (e) {
+      l.e(e.toString());
+      rethrow;
+    } on Object catch (_) {
+      log("$_");
       rethrow;
     }
   }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sfx/src/common/routing/app_route_name.dart';
 import 'package:sfx/src/common/styles/app_colors.dart';
 import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
 import 'package:sfx/src/feature/home/homework_details_page.dart';
@@ -119,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                                           .labelLarge
                                           ?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp, fontWeight: FontWeight.w500),
                                     ),
-                                    StatusWidget(currentTask: currentTask.id, index: index+4,),
+                                    StatusWidget(currentTask: currentTask.id),
                                   ],
                                 )
                               ],

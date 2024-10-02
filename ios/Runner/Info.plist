@@ -9,6 +9,12 @@
     </dict>
     <key>com.apple.security.network.client</key>
     <true/>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>My app needs access to the photo library to upload homeworks(images).</string>
+    <key>NSCameraUsageDescription</key>
+    <string>My app needs access to the camera to take photos for tasks.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>My app needs access to the microphone to record videos with sound.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

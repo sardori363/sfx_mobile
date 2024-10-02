@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sfx/generated/assets.dart';
 import 'package:sfx/src/common/styles/app_colors.dart';
 import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
 import 'package:sfx/src/data/entity/task_model.dart';
+import 'package:sfx/src/feature/home/bloc/home_state.dart';
 import 'package:sfx/src/feature/home/widgets/custom_button.dart';
+
+import 'bloc/home_bloc.dart';
 
 class HomeWorkDetailsPage extends StatelessWidget {
   const HomeWorkDetailsPage({super.key, required this.currentTask});
@@ -17,7 +21,11 @@ class HomeWorkDetailsPage extends StatelessWidget {
     ColorScheme contextColor = context.colorScheme;
     return Scaffold(
       backgroundColor: contextColor.background,
-      body: SingleChildScrollView(
+      body: BlocListener<HomeBloc, HomeState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +104,9 @@ class HomeWorkDetailsPage extends StatelessWidget {
                           height: 10,
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            BlocProvider.of<HomeBloc>(context).pickImages();
+                          },
                           style: TextButton.styleFrom(
                             minimumSize: const Size(40, 40),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
@@ -104,7 +114,7 @@ class HomeWorkDetailsPage extends StatelessWidget {
                             overlayColor: AppColors.black,
                           ),
                           child: Text(
-                            "Rasm tanlsh",
+                            "Rasm tanlash",
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700, fontSize: 14.sp),
                           ),
                         ),
@@ -124,79 +134,96 @@ class HomeWorkDetailsPage extends StatelessWidget {
                   const SizedBox(
                     height: 14,
                   ),
-                  ListView.builder(
-                    itemCount: 10,
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 10),
-                        padding: const EdgeInsets.all(8),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: contextColor.onPrimaryContainer,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 50.h,
-                                  width: 50.w,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xFFD9D9D9),
-                                      borderRadius: BorderRadius.circular(6)),
-                                ),
-                                const SizedBox(width: 8,),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "2024-10-08",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.copyWith(
-                                        color: contextColor.onPrimary,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 16.sp),
-                                    ),
-                                    Text(
-                                      "1 mb | 53% - 2 sec left",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium
-                                          ?.copyWith(
-                                          color: const Color(0xFFA7A7A7),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 12.sp),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            const SizedBox(
-                              width: double.infinity,
-                              child: LinearProgressIndicator(
-                                backgroundColor: Color(0xFFC3C9D1),
-                                color: AppColors.green,
-                                minHeight: 3,
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                  // ListView.builder(
+                  //   itemCount: 10,
+                  //   physics: const NeverScrollableScrollPhysics(),
+                  //   shrinkWrap: true,
+                  //   itemBuilder: (context, index) {
+                  //     return Container(
+                  //       margin: const EdgeInsets.only(bottom: 10),
+                  //       padding: const EdgeInsets.all(8),
+                  //       width: double.infinity,
+                  //       decoration: BoxDecoration(
+                  //         color: contextColor.onPrimaryContainer,
+                  //         borderRadius: BorderRadius.circular(12),
+                  //       ),
+                  //       child: Column(
+                  //         children: [
+                  //           Row(
+                  //             children: [
+                  //               Container(
+                  //                 height: 50.h,
+                  //                 width: 50.w,
+                  //                 decoration: BoxDecoration(
+                  //                     color: const Color(0xFFD9D9D9),
+                  //                     borderRadius: BorderRadius.circular(6)),
+                  //               ),
+                  //               const SizedBox(width: 8,),
+                  //               Column(
+                  //                 children: [
+                  //                   Text(
+                  //                     "2024-10-08",
+                  //                     style: Theme.of(context)
+                  //                         .textTheme
+                  //                         .titleMedium
+                  //                         ?.copyWith(
+                  //                       color: contextColor.onPrimary,
+                  //                         fontWeight: FontWeight.w500,
+                  //                         fontSize: 16.sp),
+                  //                   ),
+                  //                   Text(
+                  //                     "1 mb | 53% - 2 sec left",
+                  //                     style: Theme.of(context)
+                  //                         .textTheme
+                  //                         .titleMedium
+                  //                         ?.copyWith(
+                  //                         color: const Color(0xFFA7A7A7),
+                  //                         fontWeight: FontWeight.w500,
+                  //                         fontSize: 12.sp),
+                  //                   ),
+                  //                 ],
+                  //               )
+                  //             ],
+                  //           ),
+                  //           const SizedBox(
+                  //             height: 10,
+                  //           ),
+                  //           const SizedBox(
+                  //             width: double.infinity,
+                  //             child: LinearProgressIndicator(
+                  //               backgroundColor: Color(0xFFC3C9D1),
+                  //               color: AppColors.green,
+                  //               minHeight: 3,
+                  //             ),
+                  //           )
+                  //         ],
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
+
+                  TextButton(onPressed: (){
+                    BlocProvider.of<HomeBloc>(context).submitImages(currentTask.id);
+                  },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white
+                    ),
+                    child: Text(
+                    "Location",
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp),
+                  ),)
                 ],
               ),
             )
           ],
         ),
       ),
+),
     );
   }
 }

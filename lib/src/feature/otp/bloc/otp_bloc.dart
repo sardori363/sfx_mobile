@@ -42,7 +42,6 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
 
       if (isVerified != null && isVerified is OtpModel) {
         emit(OtpVerified());
-        await Future.delayed(const Duration(milliseconds: 500));
         final accessToken = isVerified.access;
         final refreshToken = isVerified.refresh;
         await AppStorage.$write(
@@ -54,13 +53,9 @@ class OtpBloc extends Bloc<OtpEvent, OtpState> {
           value: refreshToken,
         );
       } else {
-        // // Delay for 2 seconds before showing the error message
-        // await Future.delayed(const Duration(seconds: 2));
         emit(const OtpError('Verification failed. Please try again.'));
       }
     } catch (e) {
-      // Delay for 2 seconds before showing the error message
-      // await Future.delayed(const Duration(seconds: 2));
       emit(OtpError(e.toString()));
     }
   }

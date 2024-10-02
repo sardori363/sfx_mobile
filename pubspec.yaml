@@ -24,6 +24,7 @@ dependencies:
   l: ^4.0.2
   flutter_screenutil: ^5.9.0
   flutter_svg: ^2.0.10+1
+  image_picker: ^1.1.2
 
   # for slides
   carousel_slider: ^5.0.0
@@ -38,7 +39,6 @@ dependencies:
 
   #for locale storage
   flutter_secure_storage: ^9.0.0
-  shared_preferences: ^2.2.3
 
   #for launching url
   url_launcher: ^6.3.0
