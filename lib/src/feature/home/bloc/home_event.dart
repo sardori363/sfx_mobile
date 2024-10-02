@@ -8,3 +8,5 @@ class GetTasksEvent extends HomeEvent {
   final int topicNumber;
   GetTasksEvent({required this.topicNumber});
 }
+
+class DisplayUploadingTasksEvent extends HomeEvent {}

@@ -18,30 +18,7 @@ class StatusWidget extends StatelessWidget {
     ColorScheme contextColor = context.colorScheme;
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        StudentTask currentStudentTask;
-
-        if (state.studentTaskData.isNotEmpty) {
-          currentStudentTask = state.studentTaskData.firstWhere(
-                (task) => task.task == currentTask,
-            orElse: () => StudentTask(
-                id: 1,
-                status: "Left",
-                createdAt: DateTime.now(),
-                updatedAt: DateTime.now(),
-                student: 1,
-                task: currentTask
-            ),
-          );
-        } else {
-          currentStudentTask = StudentTask(
-              id: 1,
-              status: "Left",
-              createdAt: DateTime.now(),
-              updatedAt: DateTime.now(),
-              student: 1,
-              task: currentTask
-          );
-        }
+        StudentTask currentStudentTask = BlocProvider.of<HomeBloc>(context).setCurrentStudentTask(currentTask);
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
           decoration: BoxDecoration(

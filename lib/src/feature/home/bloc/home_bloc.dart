@@ -5,16 +5,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sfx/src/common/server/api/api.dart';
 import 'package:sfx/src/common/server/api/api_constants.dart';
 import 'package:sfx/src/data/entity/stats_model.dart';
-import 'package:sfx/src/data/repository/topic_repository.dart';
+import 'package:sfx/src/data/entity/student_task_model.dart';
+import 'package:sfx/src/data/repository/task_repository.dart';
 import 'package:sfx/src/feature/home/bloc/home_state.dart';
 
 part 'home_event.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc()
-      : super(HomeState(
-      pageState: HomePageState.init, tasksData: const [], topicsData: const [], studentTaskData: const [], stats: Statistics(allTasks: 0, completedTasks: 0, student: ""))) {
+  HomeBloc():super(HomeState(pageState: HomePageState.init, tasksData: const [], topicsData: const [], studentTaskData: const [], stats: Statistics(allTasks: 0, completedTasks: 0, student: ""))) {
     on<GetTasksEvent>(_getTasks);
+    on<DisplayUploadingTasksEvent>(_pickImages);
   }
 
   int currentTopicId = 4;
@@ -38,7 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   List<XFile> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
 
-  Future<void> pickImages() async {
+  Future<void> _pickImages(DisplayUploadingTasksEvent event, Emitter<HomeState> emit) async {
     final List<XFile>? pickedFiles = await _picker.pickMultiImage();
     if (pickedFiles != null) {
       for (XFile file in pickedFiles) {
@@ -48,6 +48,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         print('File Size: ${file.length()} bytes');
       }
       _selectedImages.addAll(pickedFiles);
+      emit(state.copyWith(pageState: HomePageState.detailsDisplaySuccess));
     }
   }
 
@@ -61,7 +62,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       FormData formData = FormData.fromMap({
         'task_id': taskId,
-        'images': imageFiles, // Send all images
+        'images': imageFiles,
       });
 
       log("Form Data Fields:");
@@ -98,5 +99,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await uploadImages(taskId);
       _selectedImages.clear();
     }
+  }
+
+  StudentTask setCurrentStudentTask(int currentTask){
+    StudentTask currentStudentTask;
+    if (state.studentTaskData.isNotEmpty) {
+      currentStudentTask = state.studentTaskData.firstWhere(
+            (task) => task.task == currentTask,
+        orElse: () => StudentTask(
+            id: 1,
+            status: "Left",
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            student: 1,
+            task: currentTask
+        ),
+      );
+    } else {
+      currentStudentTask = StudentTask(
+          id: 1,
+          status: "Left",
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          student: 1,
+          task: currentTask
+      );
+    }
+
+    return currentStudentTask;
   }
 }

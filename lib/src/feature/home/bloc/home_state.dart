@@ -1,11 +1,12 @@
 
 import 'package:equatable/equatable.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sfx/src/data/entity/stats_model.dart';
 import 'package:sfx/src/data/entity/student_task_model.dart';
 import 'package:sfx/src/data/entity/task_model.dart';
 import 'package:sfx/src/data/entity/topicwihnotasks_model.dart';
 
-enum HomePageState { init, loading, success, error }
+enum HomePageState { init, loading, success, detailsSuccess, detailsError, detailsDisplayError, detailsDisplaySuccess, error }
 
 class HomeState extends Equatable{
   final HomePageState pageState;
@@ -26,14 +27,14 @@ class HomeState extends Equatable{
     List<Task>? tasksData,
     List<TopicW>? topicsData,
     List<StudentTask>? studentTaskData,
-    Statistics? stats,
+    Statistics? stats
   }) {
     return HomeState(
       pageState: pageState ?? this.pageState,
       tasksData: tasksData ?? this.tasksData,
       topicsData: topicsData ?? this.topicsData,
       studentTaskData: studentTaskData ?? this.studentTaskData,
-      stats: stats ?? this.stats,
+      stats: stats ?? this.stats
     );
   }
 

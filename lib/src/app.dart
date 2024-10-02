@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sfx/src/common/bloc/auth_checker_bloc.dart';
 import 'package:sfx/src/common/routing/app_router.dart';
 import 'package:sfx/src/feature/home/bloc/home_bloc.dart';
+import 'package:sfx/src/feature/home/bloc/hwdetails_bloc.dart';
 
 import 'package:sfx/src/feature/profile/bloc/profile_bloc.dart';
 import 'common/bloc/internet_connectivity_bloc.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(create: (context) => LocaleCubit()),
             BlocProvider(create: (context) => HomeBloc()),
+            BlocProvider(create: (context) => HWDetailsBloc()),
             BlocProvider(create: (context) => OtpBloc()),
             BlocProvider(create: (context) => ThemeCubit()),
             BlocProvider(create: (context) => ProfileBloc()),
