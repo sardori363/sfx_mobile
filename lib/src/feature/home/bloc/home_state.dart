@@ -6,7 +6,7 @@ import 'package:sfx/src/data/entity/student_task_model.dart';
 import 'package:sfx/src/data/entity/task_model.dart';
 import 'package:sfx/src/data/entity/topicwihnotasks_model.dart';
 
-enum HomePageState { init, loading, success, detailsSuccess, detailsError, detailsDisplayError, detailsDisplaySuccess, error }
+enum HomePageState { init, loading, success, error }
 
 class HomeState extends Equatable{
   final HomePageState pageState;

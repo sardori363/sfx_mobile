@@ -13,8 +13,6 @@ import 'package:sfx/src/feature/home/bloc/hwdetails_event.dart';
 import 'package:sfx/src/feature/home/bloc/hwdetails_state.dart';
 import 'package:sfx/src/feature/home/widgets/custom_button.dart';
 
-import 'bloc/home_bloc.dart';
-
 class HomeWorkDetailsPage extends StatefulWidget {
   const HomeWorkDetailsPage({super.key, required this.currentTask});
 
@@ -41,7 +39,7 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
       backgroundColor: contextColor.background,
       body: BlocBuilder<HWDetailsBloc, HWDetailsState>(
         builder: (context, state) {
-          log("new ${state.imagesForDetailsPage.status}");
+          log("status ${state.imagesForDetailsPage.status}");
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
@@ -76,26 +74,25 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                   ],
                 ),
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         widget.currentTask.title,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: contextColor.onPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.sp,
-                        ),
+                              color: contextColor.onPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18.sp,
+                            ),
                       ),
                       Text(
                         widget.currentTask.description,
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: contextColor.onPrimary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.sp,
-                        ),
+                              color: contextColor.onPrimary,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14.sp,
+                            ),
                       ),
                       const SizedBox(
                         height: 20,
@@ -103,10 +100,10 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                       Text(
                         "Upload files",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: contextColor.onPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18.sp,
-                        ),
+                              color: contextColor.onPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18.sp,
+                            ),
                       ),
                       const SizedBox(
                         height: 16,
@@ -126,22 +123,24 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                             SvgPicture.asset(Assets.iconsDocumentUpload),
                             Text(
                               "Uyga vazifani joylash",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                color: contextColor.onPrimary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.sp,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: contextColor.onPrimary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp,
+                                  ),
                             ),
                             const SizedBox(
                               height: 10,
                             ),
                             TextButton(
                               onPressed: () {
-                                BlocProvider.of<HomeBloc>(context).add(
-                                    DisplayUploadingTasksEvent());
+                                if (state.pageState == HWDetailsPageState.success) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Uyga vazifa yuklangan')),
+                                  );
+                                } else {
+                                  BlocProvider.of<HWDetailsBloc>(context).add(DisplayUploadingTasksEvent());
+                                }
                               },
                               style: TextButton.styleFrom(
                                 minimumSize: const Size(40, 40),
@@ -153,13 +152,10 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                               ),
                               child: Text(
                                 "Rasm tanlash",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14.sp,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14.sp,
+                                    ),
                               ),
                             ),
                           ],
@@ -171,118 +167,136 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                       Text(
                         "Ruhsat etilgan fayl tiplari: .jpg va .png. Ruhsat etilgan fayl hajmi 10mbgacha",
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: const Color(0xffA7A7A7),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12.sp,
-                        ),
+                              color: const Color(0xffA7A7A7),
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12.sp,
+                            ),
                       ),
                       const SizedBox(
                         height: 14,
                       ),
-                      state.pageState == HWDetailsPageState.success
+                      state.imagesForDetailsPage.status == "Approved" ||
+                              state.imagesForDetailsPage.status == "Pending" ||
+                              state.imagesForDetailsPage.status == HWDetailsPageState.success
                           ? ListView.builder(
-                        itemCount: state.imagesForDetailsPage.images.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: 10),
-                            padding: const EdgeInsets.all(8),
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: contextColor.onPrimaryContainer,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      height: 50.h,
-                                      width: 50.w,
-                                      child: ClipRRect(
-                                        borderRadius:
-                                        BorderRadius.circular(6),
-                                        child: Image.network(
-                                          state.imagesForDetailsPage
-                                              .images[index].imageUrl,
-                                          fit: BoxFit.fill,
+                              itemCount: state.imagesForDetailsPage.images.length,
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) {
+                                var currentImage = state.imagesForDetailsPage.images[index];
+                                return Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.all(8),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: contextColor.onPrimaryContainer,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            height: 50.h,
+                                            width: 50.w,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(6),
+                                              child: state.isFileTypeFile
+                                                  ? Image.file(
+                                                      currentImage,
+                                                      fit: BoxFit.fill,
+                                                    )
+                                                  : Image.network(
+                                                      currentImage.imageUrl,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: 8,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "a",
+                                                // "{currentImage.uploadedAt.year}-{currentImage.uploadedAt.month}-{currentImage.uploadedAt.day}",
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                      color: contextColor.onPrimary,
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 16.sp,
+                                                    ),
+                                              ),
+                                              Text(
+                                                state.imagesForDetailsPage.status,
+                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                      color: const Color(0xFFA7A7A7),
+                                                      fontWeight: FontWeight.w500,
+                                                      fontSize: 12.sp,
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: LinearProgressIndicator(
+                                          backgroundColor: const Color(0xFFC3C9D1),
+                                          value: 100,
+                                          color: state.imagesForDetailsPage.status == 'Approved' ? AppColors.green : AppColors.yellow,
+                                          minHeight: 3,
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 8,
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${state.imagesForDetailsPage.images[index].uploadedAt}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                            color:
-                                            contextColor.onPrimary,
-                                            fontWeight:
-                                            FontWeight.w500,
-                                            fontSize: 16.sp,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${state.imagesForDetailsPage.status} | 53% - 2 sec left",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                            color: const Color(
-                                                0xFFA7A7A7),
-                                            fontWeight:
-                                            FontWeight.w500,
-                                            fontSize: 12.sp,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                const SizedBox(
-                                  width: double.infinity,
-                                  child: LinearProgressIndicator(
-                                    backgroundColor: Color(0xFFC3C9D1),
-                                    color: AppColors.green,
-                                    minHeight: 3,
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      )
+                                );
+                              },
+                            )
                           : const SizedBox.shrink(),
-                      TextButton(
-                        onPressed: () {
-                          BlocProvider.of<HomeBloc>(context)
-                              .submitImages(widget.currentTask.id);
-                        },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.white,
-                        ),
-                        child: Text(
-                          "Location",
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.sp,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () {
+                                BlocProvider.of<HWDetailsBloc>(context).add(ClearImagesEvent());
+                              },
+                              height: 40.h,
+                              padding: const EdgeInsets.all(8),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              color: contextColor.onPrimaryContainer,
+                              child: Text(
+                                "Bekor qilish",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(color: contextColor.onPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () {
+                                BlocProvider.of<HWDetailsBloc>(context).submitImages(widget.currentTask.id);
+                              },
+                              height: 40.h,
+                              padding: const EdgeInsets.all(8),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                              color: AppColors.yellow,
+                              child: Text(
+                                "Jo'natish",
+                                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16.sp),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),

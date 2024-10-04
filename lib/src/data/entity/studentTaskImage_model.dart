@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 List<StudentTaskImage> studentTaskImageFromJson(String str) =>
     List<StudentTaskImage>.from(jsonDecode(str).map((item) => StudentTaskImage.fromJson(item)));
@@ -80,4 +81,24 @@ class ImageData {
       'student_task': studentTask,
     };
   }
+}
+
+class StudentTaskImageFile {
+  final int id;
+  final List<File> images;
+  final String status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int student;
+  final int task;
+
+  StudentTaskImageFile({
+    required this.id,
+    required this.images,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.student,
+    required this.task,
+  });
 }

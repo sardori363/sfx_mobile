@@ -1,26 +1,29 @@
 import 'package:equatable/equatable.dart';
-import 'package:sfx/src/data/entity/studentTaskImage_model.dart';
 
 enum HWDetailsPageState { init, loading, success, error, noImage }
 
 class HWDetailsState extends Equatable{
   final HWDetailsPageState pageState;
-  final StudentTaskImage imagesForDetailsPage;
+  final dynamic imagesForDetailsPage;
+  final bool isFileTypeFile;
 
   const HWDetailsState({
     required this.pageState,
-    required this.imagesForDetailsPage
+    required this.imagesForDetailsPage,
+    required this.isFileTypeFile
   });
   HWDetailsState copyWith({
     HWDetailsPageState? pageState,
-    StudentTaskImage? imagesForDetailsPage
+    dynamic? imagesForDetailsPage,
+    bool? isFileTypeFile
   }) {
     return HWDetailsState(
         pageState: pageState ?? this.pageState,
-        imagesForDetailsPage: imagesForDetailsPage ?? this.imagesForDetailsPage
+        imagesForDetailsPage: imagesForDetailsPage ?? this.imagesForDetailsPage,
+        isFileTypeFile: isFileTypeFile ?? this.isFileTypeFile
     );
   }
 
   @override
-  List<Object?> get props => [pageState, imagesForDetailsPage];
+  List<Object?> get props => [pageState, imagesForDetailsPage, isFileTypeFile];
 }

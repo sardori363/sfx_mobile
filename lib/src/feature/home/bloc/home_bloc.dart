@@ -14,7 +14,6 @@ part 'home_event.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc():super(HomeState(pageState: HomePageState.init, tasksData: const [], topicsData: const [], studentTaskData: const [], stats: Statistics(allTasks: 0, completedTasks: 0, student: ""))) {
     on<GetTasksEvent>(_getTasks);
-    on<DisplayUploadingTasksEvent>(_pickImages);
   }
 
   int currentTopicId = 4;
@@ -35,71 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  List<XFile> _selectedImages = [];
-  final ImagePicker _picker = ImagePicker();
 
-  Future<void> _pickImages(DisplayUploadingTasksEvent event, Emitter<HomeState> emit) async {
-    final List<XFile>? pickedFiles = await _picker.pickMultiImage();
-    if (pickedFiles != null) {
-      for (XFile file in pickedFiles) {
-        log("image info: ");
-        print('File Name: ${file.name}');
-        print('File Path: ${file.path}');
-        print('File Size: ${file.length()} bytes');
-      }
-      _selectedImages.addAll(pickedFiles);
-      emit(state.copyWith(pageState: HomePageState.detailsDisplaySuccess));
-    }
-  }
-
-  Future<void> uploadImages(int taskId) async {
-    try {
-      List<MultipartFile> imageFiles = [];
-
-      for (var image in _selectedImages) {
-        imageFiles.add(await MultipartFile.fromFile(image.path));
-      }
-
-      FormData formData = FormData.fromMap({
-        'task_id': taskId,
-        'images': imageFiles,
-      });
-
-      log("Form Data Fields:");
-      for (var field in formData.fields) {
-        log('${field.key}: ${field.value}');
-      }
-
-      log("Form Data Files:");
-      for (var file in formData.files) {
-        log('${file.key}: ${file.value.filename}');
-      }
-
-      String? response = await ApiService.postTask(ApiConst.postTask, formData);
-
-      if (response != null) {
-        log('Upload successful: $response');
-      } else {
-        log('Upload failed');
-      }
-    } on DioError catch (e) {
-      if (e.response != null) {
-        log('Dio error: ${e.response?.data}');
-      } else {
-        log('Error without response: $e');
-      }
-      rethrow;
-    } catch (e) {
-      log('Error uploading images: $e');
-    }
-  }
-
-  void submitImages(int taskId) async {
-    if (_selectedImages.isNotEmpty) {
-      await uploadImages(taskId);
-      _selectedImages.clear();
-    }
-  }
 
   StudentTask setCurrentStudentTask(int currentTask){
     StudentTask currentStudentTask;
