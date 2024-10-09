@@ -8,7 +8,7 @@ import 'package:sfx/src/feature/profile/profile_page.dart';
 import 'package:sfx/src/feature/tests/tests_page.dart';
 
 import '../../../generated/assets.dart';
-import '../home/home_page.dart';
+import '../home/pages/home_page.dart';
 import 'bloc/bottom_nav.dart';
 
 class MainWrapper extends StatefulWidget {

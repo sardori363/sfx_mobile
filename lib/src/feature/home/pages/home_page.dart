@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sfx/src/common/styles/app_colors.dart';
 import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
-import 'package:sfx/src/feature/home/homework_details_page.dart';
+import 'package:sfx/src/feature/home/pages/homework_details_page.dart';
 import 'package:sfx/src/feature/home/widgets/filter_widget.dart';
 import 'package:sfx/src/feature/home/widgets/stats_widget.dart';
 import 'package:sfx/src/feature/home/widgets/status_widget.dart';
 
-import '../../data/entity/task_model.dart';
-import 'bloc/home_bloc.dart';
-import 'bloc/home_state.dart';
+import '../../../data/entity/task_model.dart';
+import '../bloc/home_bloc.dart';
+import '../bloc/home_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

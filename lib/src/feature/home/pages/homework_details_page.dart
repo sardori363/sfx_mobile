@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sfx/generated/assets.dart';
+import 'package:sfx/src/common/routing/app_route_name.dart';
 import 'package:sfx/src/common/styles/app_colors.dart';
 import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
 import 'package:sfx/src/data/entity/task_model.dart';
@@ -37,6 +39,59 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
     ColorScheme contextColor = context.colorScheme;
     return Scaffold(
       backgroundColor: contextColor.background,
+      bottomNavigationBar: BlocBuilder<HWDetailsBloc, HWDetailsState>(
+        builder: (context, state){
+          log("${state.pageState}");
+          if(state.pageState == HWDetailsPageState.noImage) {
+            return Row(
+              children: [
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {
+                      BlocProvider.of<HWDetailsBloc>(context).add(ClearImagesEvent());
+                      setState(() {});
+                    },
+                    height: 40.h,
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    color: contextColor.onPrimaryContainer,
+                    child: Text(
+                      "Clear",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: contextColor.onPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 30,
+                ),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () async {
+                      bool result = await BlocProvider.of<HWDetailsBloc>(context).submitImages(widget.currentTask.id);
+                      if(result){
+                        context.go(AppRouteName.successPage);
+                      }
+                    },
+                    height: 40.h,
+                    padding: const EdgeInsets.all(8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                    color: AppColors.yellow,
+                    child: Text(
+                      "Upload",
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16.sp),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      ),
       body: BlocBuilder<HWDetailsBloc, HWDetailsState>(
         builder: (context, state) {
           log("status ${state.imagesForDetailsPage.status}");
@@ -177,7 +232,7 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                       ),
                       state.imagesForDetailsPage.status == "Approved" ||
                               state.imagesForDetailsPage.status == "Pending" ||
-                              state.imagesForDetailsPage.status == HWDetailsPageState.success
+                              state.pageState == HWDetailsPageState.success
                           ? ListView.builder(
                               itemCount: state.imagesForDetailsPage.images.length,
                               physics: const NeverScrollableScrollPhysics(),
@@ -219,7 +274,7 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "a",
+                                                "${state.imagesForDetailsPage.updatedAt.year}-${state.imagesForDetailsPage.updatedAt.month}-${state.imagesForDetailsPage.updatedAt.day}",
                                                 // "{currentImage.uploadedAt.year}-{currentImage.uploadedAt.month}-{currentImage.uploadedAt.day}",
                                                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                                                       color: contextColor.onPrimary,
@@ -257,46 +312,6 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                               },
                             )
                           : const SizedBox.shrink(),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: MaterialButton(
-                              onPressed: () {
-                                BlocProvider.of<HWDetailsBloc>(context).add(ClearImagesEvent());
-                              },
-                              height: 40.h,
-                              padding: const EdgeInsets.all(8),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                              color: contextColor.onPrimaryContainer,
-                              child: Text(
-                                "Bekor qilish",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(color: contextColor.onPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          Expanded(
-                            child: MaterialButton(
-                              onPressed: () {
-                                BlocProvider.of<HWDetailsBloc>(context).submitImages(widget.currentTask.id);
-                              },
-                              height: 40.h,
-                              padding: const EdgeInsets.all(8),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                              color: AppColors.yellow,
-                              child: Text(
-                                "Jo'natish",
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, fontSize: 16.sp),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
                     ],
                   ),
                 ),

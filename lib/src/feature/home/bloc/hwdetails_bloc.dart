@@ -58,7 +58,7 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
     }
   }
 
-  Future<void> uploadImages(int taskId) async {
+  Future<bool> uploadImages(int taskId) async {
     try {
       List<MultipartFile> imageFiles = [];
 
@@ -71,22 +71,14 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
         'images': imageFiles,
       });
 
-      log("Form Data Fields:");
-      for (var field in formData.fields) {
-        log('${field.key}: ${field.value}');
-      }
-
-      log("Form Data Files:");
-      for (var file in formData.files) {
-        log('${file.key}: ${file.value.filename}');
-      }
-
       String? response = await ApiService.postTask(ApiConst.postTask, formData);
 
       if (response != null) {
         log('Upload successful: $response');
+        return true;
       } else {
         log('Upload failed');
+        return false;
       }
     } on DioError catch (e) {
       if (e.response != null) {
@@ -94,22 +86,32 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
       } else {
         log('Error without response: $e');
       }
+      return false;
       rethrow;
     } catch (e) {
       log('Error uploading images: $e');
+      return false;
     }
   }
 
-  void submitImages(int taskId) async {
+  Future<bool> submitImages(int taskId) async {
+    late bool result;
     if (_selectedImages.isNotEmpty) {
-      await uploadImages(taskId);
+      result = await uploadImages(taskId);
+      log("$result");
       _selectedImages.clear();
     }
+
+    return result;
   }
 
-  void _clearImages(ClearImagesEvent event, Emitter<HWDetailsState> emit) async {
+  void _clearImages(ClearImagesEvent event, Emitter<HWDetailsState> emit) {
     _selectedImages.clear();
-    state.copyWith(pageState: HWDetailsPageState.noImage, imagesForDetailsPage: null);
+    log("clearing");
+    emit(state.copyWith(
+      imagesForDetailsPage: StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
+      pageState: HWDetailsPageState.init,
+    ));
   }
 
 }

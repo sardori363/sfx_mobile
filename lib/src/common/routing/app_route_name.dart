@@ -10,6 +10,7 @@ final class AppRouteName {
   //home page
   static const String homePage = "/";
   static const String homeworkDetailsPage = "/homework_details_page";
+  static const String successPage = "/success_page";
 
   //profile page
   static const String profilePage = "/profile_page";

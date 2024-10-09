@@ -17,6 +17,7 @@ class Assets {
   static const String iconsProfileDefault = 'assets/icons/profileDefault.svg';
   static const String iconsProfileFilled = 'assets/icons/profileFilled.svg';
   static const String iconsRoundClose = 'assets/icons/round-close.svg';
+  static const String iconsSuccessLarge = 'assets/icons/successLarge.svg';
   static const String iconsSun = 'assets/icons/sun.svg';
   static const String iconsTestDefault = 'assets/icons/testDefault.svg';
   static const String iconsTestFilled = 'assets/icons/testFilled.svg';
@@ -27,7 +28,7 @@ class Assets {
   static const String imagesProfilePng = 'assets/images/profile_png.png';
   static const String imagesSfxSplash = 'assets/images/sfx_splash.png';
   static const String imagesTelegram = 'assets/images/telegram.png';
-  static const String imagesTrade3 = 'assets/images/trade 3.png';
+  static const String imagesTrade3 = 'assets/images/trade3.png';
   static const String imagesWifiOff = 'assets/images/wifi_off.svg';
 
 }

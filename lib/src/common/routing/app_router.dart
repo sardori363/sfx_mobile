@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sfx/src/common/local/app_storage.dart';
 import 'package:sfx/src/data/entity/task_model.dart';
-import 'package:sfx/src/feature/home/home_page.dart';
-import 'package:sfx/src/feature/home/homework_details_page.dart';
+import 'package:sfx/src/feature/home/pages/home_page.dart';
+import 'package:sfx/src/feature/home/pages/homework_details_page.dart';
+import 'package:sfx/src/feature/home/pages/success_page.dart';
 import 'package:sfx/src/feature/init/splash_screen.dart';
 import 'package:sfx/src/feature/main/main_wrapper.dart';
 import 'package:sfx/src/feature/otp/otp_input_page.dart';
@@ -49,6 +49,13 @@ class AppRouter {
         path: AppRouteName.otpInputPage,
         builder: (BuildContext context, GoRouterState state) {
           return const OtpInputPage();
+        },
+      ),
+      GoRoute(
+        name: "SuccessPage",
+        path: AppRouteName.successPage,
+        builder: (BuildContext context, GoRouterState state) {
+          return const SuccessPage();
         },
       ),
       GoRoute(
