@@ -12,7 +12,7 @@ import 'package:sfx/src/feature/home/bloc/home_state.dart';
 part 'home_event.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc():super(HomeState(pageState: HomePageState.init, tasksData: const [], topicsData: const [], studentTaskData: const [], stats: Statistics(allTasks: 0, completedTasks: 0, student: ""))) {
+  HomeBloc():super(HomeState(pageState: HomePageState.init, tasksData: const [], topicsData: const [], stats: Statistics(allTasks: 0, completedTasks: 0, student: ""))) {
     on<GetTasksEvent>(_getTasks);
   }
 
@@ -20,13 +20,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _getTasks(GetTasksEvent event, Emitter<HomeState> emit) async {
     emit(state.copyWith(pageState: HomePageState.loading));
-    var result = await TaskRepository.getTopic(event.topicNumber);
+    var result = await TaskRepository.getTasksWStatusByTopicId(event.topicNumber);
     var resultTopics = await TaskRepository.getAllTopics();
-    var resultStatus = await TaskRepository.getAllStatus();
     var resultStats = await TaskRepository.getStats();
-    if (result != null && resultTopics != null && resultStatus != null && resultStats != null) {
+    if (result != null && resultTopics != null && resultStats != null) {
       emit(
-        state.copyWith(pageState: HomePageState.success, tasksData: result, topicsData: resultTopics, studentTaskData: resultStatus, stats: resultStats),
+        state.copyWith(pageState: HomePageState.success, tasksData: result, topicsData: resultTopics, stats: resultStats),
       );
     } else {
       log("home bloc get arenas error");
@@ -36,31 +35,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
 
-  StudentTask setCurrentStudentTask(int currentTask){
-    StudentTask currentStudentTask;
-    if (state.studentTaskData.isNotEmpty) {
-      currentStudentTask = state.studentTaskData.firstWhere(
-            (task) => task.task == currentTask,
-        orElse: () => StudentTask(
-            id: 1,
-            status: "Left",
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            student: 1,
-            task: currentTask
-        ),
-      );
-    } else {
-      currentStudentTask = StudentTask(
-          id: 1,
-          status: "Left",
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          student: 1,
-          task: currentTask
-      );
-    }
-
-    return currentStudentTask;
-  }
+  // StudentTask setCurrentStudentTask(int currentTask){
+  //   StudentTask currentStudentTask;
+  //   if (state.studentTaskData.isNotEmpty) {
+  //     currentStudentTask = state.studentTaskData.firstWhere(
+  //           (task) => task.task == currentTask,
+  //       orElse: () => StudentTask(
+  //           id: 1,
+  //           status: "Left",
+  //           createdAt: DateTime.now(),
+  //           updatedAt: DateTime.now(),
+  //           student: 1,
+  //           task: currentTask
+  //       ),
+  //     );
+  //   } else {
+  //     currentStudentTask = StudentTask(
+  //         id: 1,
+  //         status: "Left",
+  //         createdAt: DateTime.now(),
+  //         updatedAt: DateTime.now(),
+  //         student: 1,
+  //         task: currentTask
+  //     );
+  //   }
+  //
+  //   return currentStudentTask;
+  // }
 }

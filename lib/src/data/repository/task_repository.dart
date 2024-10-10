@@ -15,7 +15,25 @@ class TaskRepository {
       var topicsJson = await ApiService.getWithToken("en/tasks/topics/$topicNumber/tasks", {});
       if (topicsJson != null) {
         Topic topic = Topic.fromJson(jsonDecode(topicsJson));
+        // log("example: ${topic.tasks}");
         return topic.tasks;
+      } else {
+        log("API response is null");
+        return null;
+      }
+    } catch (e, stacktrace) {
+      log("Error fetching tasks: $e");
+      log("Stacktrace: $stacktrace");
+      return null;
+    }
+  }
+
+  static Future<List<TaskWStatus>?> getTasksWStatusByTopicId(int topicNumber) async {
+    try {
+      var topicsJson = await ApiService.getWithToken("en/tasks/topics/$topicNumber/tasks-with-student-tasks/", {});
+      if (topicsJson != null) {
+        log("example2: $topicsJson");
+        return taskWStatusFromJson(topicsJson);
       } else {
         log("API response is null");
         return null;

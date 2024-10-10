@@ -6,7 +6,6 @@ import 'package:sfx/src/common/utils/extensions/context_extensions.dart';
 import 'package:sfx/src/feature/home/pages/homework_details_page.dart';
 import 'package:sfx/src/feature/home/widgets/filter_widget.dart';
 import 'package:sfx/src/feature/home/widgets/stats_widget.dart';
-import 'package:sfx/src/feature/home/widgets/status_widget.dart';
 
 import '../../../data/entity/task_model.dart';
 import '../bloc/home_bloc.dart';
@@ -43,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
-          if(state.pageState == HomePageState.success) {
+          if (state.pageState == HomePageState.success) {
             return Padding(
               padding: EdgeInsets.only(left: 16.w, right: 16.w),
               child: SingleChildScrollView(
@@ -67,9 +66,9 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        Task currentTask = state.tasksData[index];
+                        TaskWStatus currentTask = state.tasksData[index];
                         return GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             // context.push(AppRouteName.homeworkDetailsPage);
                             Navigator.push(
                               context,
@@ -93,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Center(
                                   child: Text(
-                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId-4].name,
+                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId - 4].name,
                                     style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp),
                                   ),
                                 ),
@@ -101,7 +100,12 @@ class _HomePageState extends State<HomePage> {
                                   width: double.infinity,
                                   height: 100.h,
                                   margin: const EdgeInsets.only(top: 6, bottom: 20),
-                                  child: ClipRRect(borderRadius: BorderRadius.circular(6) ,child: Image.network(currentTask.imageUrl, fit: BoxFit.fill,)),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(6),
+                                      child: Image.network(
+                                        currentTask.imageUrl,
+                                        fit: BoxFit.fill,
+                                      )),
                                 ),
                                 Text(
                                   currentTask.title,
@@ -117,7 +121,25 @@ class _HomePageState extends State<HomePage> {
                                           .labelLarge
                                           ?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp, fontWeight: FontWeight.w500),
                                     ),
-                                    StatusWidget(currentTask: currentTask.id),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(4),
+                                          color: currentTask.status == "Approved"
+                                              ? AppColors.green
+                                              : currentTask.status == "Pending"
+                                                  ? AppColors.yellow
+                                                  : AppColors.red),
+                                      child: Text(
+                                        currentTask.status ?? "Left",
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                            color: currentTask.status == "Pending"
+                                                ? AppColors.black
+                                                : contextColor.onPrimary,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16.sp),
+                                      ),
+                                    ),
                                   ],
                                 )
                               ],
@@ -130,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             );
-          } else if(state.pageState == HomePageState.error){
+          } else if (state.pageState == HomePageState.error) {
             return const Placeholder();
           } else {
             return const Center(
@@ -150,4 +172,3 @@ String truncateText(String text, {int limit = 30}) {
     return text;
   }
 }
-

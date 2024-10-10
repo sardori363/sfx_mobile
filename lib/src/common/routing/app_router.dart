@@ -62,7 +62,7 @@ class AppRouter {
         name: "HWDetailsPage",
         path: AppRouteName.homeworkDetailsPage,
         builder: (BuildContext context, GoRouterState state) {
-          final Task? task = state.extra as Task?;
+          final TaskWStatus? task = state.extra as TaskWStatus?;
           if (task != null) {
             log('Navigating to ArenaDetailsPage with arena: ${task.title}');
           } else {

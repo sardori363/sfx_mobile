@@ -18,7 +18,7 @@ import 'package:sfx/src/feature/home/widgets/custom_button.dart';
 class HomeWorkDetailsPage extends StatefulWidget {
   const HomeWorkDetailsPage({super.key, required this.currentTask});
 
-  final Task currentTask;
+  final TaskWStatus currentTask;
 
   @override
   State<HomeWorkDetailsPage> createState() => _HomeWorkDetailsPageState();
