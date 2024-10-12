@@ -9,4 +9,9 @@ class GetImagesEvent extends HwDetailsEvent {
 
 class DisplayUploadingTasksEvent extends HwDetailsEvent{}
 class ClearImagesEvent extends HwDetailsEvent {}
+class SubmitImagesEvent extends HwDetailsEvent {
+  final int taskId;
+
+  SubmitImagesEvent(this.taskId);
+}
 

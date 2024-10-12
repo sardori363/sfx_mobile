@@ -25,10 +25,10 @@ class FilterWidget extends StatelessWidget {
                 margin: EdgeInsets.only(right: 8.w),
                 child: MaterialButton(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                  color: BlocProvider.of<HomeBloc>(context).currentTopicId == index+4 ? AppColors.yellow : context.colorScheme.onPrimaryContainer,
+                  color: BlocProvider.of<HomeBloc>(context).currentTopicId == index+1 ? AppColors.yellow : context.colorScheme.onPrimaryContainer,
                   onPressed: () {
-                    BlocProvider.of<HomeBloc>(context).currentTopicId = index+4;
-                    BlocProvider.of<HomeBloc>(context).add(GetTasksEvent(topicNumber: index+4));
+                    BlocProvider.of<HomeBloc>(context).currentTopicId = index+1;
+                    BlocProvider.of<HomeBloc>(context).add(GetTasksEvent(topicNumber: index+1));
                   },
                   child: Text(
                     state.topicsData[index].name,
@@ -37,7 +37,7 @@ class FilterWidget extends StatelessWidget {
                         .textTheme
                         .labelMedium
                         ?.copyWith(
-                        color: BlocProvider.of<HomeBloc>(context).currentTopicId == index+4 ? AppColors.black : context.colorScheme.onPrimary,
+                        color: BlocProvider.of<HomeBloc>(context).currentTopicId == index+1 ? AppColors.black : context.colorScheme.onPrimary,
                         fontSize: 14.sp),
                   ),
                 ),

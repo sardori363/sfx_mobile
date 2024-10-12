@@ -16,7 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<GetTasksEvent>(_getTasks);
   }
 
-  int currentTopicId = 4;
+  int currentTopicId = 1;
 
   void _getTasks(GetTasksEvent event, Emitter<HomeState> emit) async {
     emit(state.copyWith(pageState: HomePageState.loading));
@@ -32,34 +32,4 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(pageState: HomePageState.error));
     }
   }
-
-
-
-  // StudentTask setCurrentStudentTask(int currentTask){
-  //   StudentTask currentStudentTask;
-  //   if (state.studentTaskData.isNotEmpty) {
-  //     currentStudentTask = state.studentTaskData.firstWhere(
-  //           (task) => task.task == currentTask,
-  //       orElse: () => StudentTask(
-  //           id: 1,
-  //           status: "Left",
-  //           createdAt: DateTime.now(),
-  //           updatedAt: DateTime.now(),
-  //           student: 1,
-  //           task: currentTask
-  //       ),
-  //     );
-  //   } else {
-  //     currentStudentTask = StudentTask(
-  //         id: 1,
-  //         status: "Left",
-  //         createdAt: DateTime.now(),
-  //         updatedAt: DateTime.now(),
-  //         student: 1,
-  //         task: currentTask
-  //     );
-  //   }
-  //
-  //   return currentStudentTask;
-  // }
 }

@@ -13,15 +13,21 @@ import 'package:sfx/src/feature/home/bloc/hwdetails_state.dart';
 import 'hwdetails_event.dart';
 
 class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
-  HWDetailsBloc() : super(HWDetailsState(imagesForDetailsPage: StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0), pageState: HWDetailsPageState.init, isFileTypeFile: false)) {
+  HWDetailsBloc()
+      : super(HWDetailsState(
+            imagesForDetailsPage:
+                StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
+            pageState: HWDetailsPageState.init,
+            isFileTypeFile: false)) {
     on<GetImagesEvent>(_getImages);
     on<ClearImagesEvent>(_clearImages);
     on<DisplayUploadingTasksEvent>(_pickImages);
+    on<SubmitImagesEvent>(_submitImages);
   }
 
   void _getImages(GetImagesEvent event, Emitter<HWDetailsState> emit) async {
     emit(state.copyWith(pageState: HWDetailsPageState.loading));
-    try{
+    try {
       StudentTaskImage? result = await StudentTaskRepository.getImages(event.studentTaskId);
       if (result != null) {
         log(result.images[0].imageUrl);
@@ -29,10 +35,18 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
           state.copyWith(pageState: HWDetailsPageState.success, imagesForDetailsPage: result, isFileTypeFile: false),
         );
       } else {
-        emit(state.copyWith(pageState: HWDetailsPageState.noImage,imagesForDetailsPage: StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0), isFileTypeFile: false));
+        emit(state.copyWith(
+            pageState: HWDetailsPageState.noImage,
+            imagesForDetailsPage:
+                StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
+            isFileTypeFile: false));
       }
-    }catch(e){
-      emit(state.copyWith(pageState: HWDetailsPageState.noImage, imagesForDetailsPage: StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0), isFileTypeFile: false));
+    } catch (e) {
+      emit(state.copyWith(
+          pageState: HWDetailsPageState.noImage,
+          imagesForDetailsPage:
+              StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
+          isFileTypeFile: false));
     }
   }
 
@@ -43,7 +57,6 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
     final List<XFile>? pickedFiles = await _picker.pickMultiImage();
     if (pickedFiles != null) {
       List<File> fileList = pickedFiles.map((xFile) => File(xFile.path)).toList();
-
       StudentTaskImageFile studentTaskImageFile = StudentTaskImageFile(
         id: 100,
         images: fileList,
@@ -54,7 +67,7 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
         task: 202,
       );
       _selectedImages.addAll(pickedFiles);
-      emit(state.copyWith(pageState: HWDetailsPageState.success, imagesForDetailsPage: studentTaskImageFile, isFileTypeFile: true));
+      emit(state.copyWith(pageState: HWDetailsPageState.noImage, imagesForDetailsPage: studentTaskImageFile, isFileTypeFile: true));
     }
   }
 
@@ -94,14 +107,19 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
     }
   }
 
-  Future<bool> submitImages(int taskId) async {
+  Future<bool> _submitImages(SubmitImagesEvent event, Emitter<HWDetailsState> emit) async {
+    emit(state.copyWith(pageState: HWDetailsPageState.loading));
     late bool result;
     if (_selectedImages.isNotEmpty) {
-      result = await uploadImages(taskId);
+      result = await uploadImages(event.taskId);
       log("$result");
+      if (result) {
+        emit(state.copyWith(pageState: HWDetailsPageState.goToSuccess));
+      } else {
+        emit(state.copyWith(pageState: HWDetailsPageState.error));
+      }
       _selectedImages.clear();
     }
-
     return result;
   }
 
@@ -109,9 +127,9 @@ class HWDetailsBloc extends Bloc<HwDetailsEvent, HWDetailsState> {
     _selectedImages.clear();
     log("clearing");
     emit(state.copyWith(
-      imagesForDetailsPage: StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
+      imagesForDetailsPage:
+          StudentTaskImage(student: 0, id: 0, createdAt: DateTime.now(), updatedAt: DateTime.now(), images: [], status: "", task: 0),
       pageState: HWDetailsPageState.init,
     ));
   }
-
 }

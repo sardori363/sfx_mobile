@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum HWDetailsPageState { init, loading, success, error, noImage }
+enum HWDetailsPageState { init, loading, success, error, noImage, goToSuccess}
 
 class HWDetailsState extends Equatable{
   final HWDetailsPageState pageState;
