@@ -27,8 +27,13 @@ class FilterWidget extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                   color: BlocProvider.of<HomeBloc>(context).currentTopicId == index+1 ? AppColors.yellow : context.colorScheme.onPrimaryContainer,
                   onPressed: () {
-                    BlocProvider.of<HomeBloc>(context).currentTopicId = index+1;
-                    BlocProvider.of<HomeBloc>(context).add(GetTasksEvent(topicNumber: index+1));
+                    if(BlocProvider.of<HomeBloc>(context).currentTopicId == index+1){
+                      BlocProvider.of<HomeBloc>(context).currentTopicId = 0;
+                      BlocProvider.of<HomeBloc>(context).add(GetTasksEvent(topicNumber: 0));
+                    } else{
+                      BlocProvider.of<HomeBloc>(context).currentTopicId = index+1;
+                      BlocProvider.of<HomeBloc>(context).add(GetTasksEvent(topicNumber: index+1));
+                    }
                   },
                   child: Text(
                     state.topicsData[index].name,

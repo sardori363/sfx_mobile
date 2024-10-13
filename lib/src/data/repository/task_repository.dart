@@ -45,6 +45,23 @@ class TaskRepository {
     }
   }
 
+  static Future<List<TaskWStatus>?> getTasksWStatus() async {
+    try {
+      var topicsJson = await ApiService.getWithToken("en/tasks/topics/tasks-with-student-tasks/", {});
+      if (topicsJson != null) {
+        log("example2: $topicsJson");
+        return taskWStatusFromJson(topicsJson);
+      } else {
+        log("API response is null");
+        return null;
+      }
+    } catch (e, stacktrace) {
+      log("Error fetching tasks: $e");
+      log("Stacktrace: $stacktrace");
+      return null;
+    }
+  }
+
   static Future<List<TopicW>?> getAllTopics() async {
     try {
       var topicsJson = await ApiService.getWithToken(ApiConst.getAllTopics, {});

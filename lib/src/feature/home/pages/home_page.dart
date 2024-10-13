@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _homeBloc = BlocProvider.of<HomeBloc>(context);
-    _homeBloc.add(GetTasksEvent(topicNumber: 1));
+    _homeBloc.add(GetTasksEvent(topicNumber: 0));
   }
 
   @override
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Center(
                                   child: Text(
-                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId - 1].name,
+                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId].name,
                                     style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp),
                                   ),
                                 ),

@@ -6,6 +6,7 @@ import 'package:sfx/src/common/server/api/api.dart';
 import 'package:sfx/src/common/server/api/api_constants.dart';
 import 'package:sfx/src/data/entity/stats_model.dart';
 import 'package:sfx/src/data/entity/student_task_model.dart';
+import 'package:sfx/src/data/entity/task_model.dart';
 import 'package:sfx/src/data/repository/task_repository.dart';
 import 'package:sfx/src/feature/home/bloc/home_state.dart';
 
@@ -16,11 +17,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<GetTasksEvent>(_getTasks);
   }
 
-  int currentTopicId = 1;
+  int currentTopicId = 0;
 
   void _getTasks(GetTasksEvent event, Emitter<HomeState> emit) async {
     emit(state.copyWith(pageState: HomePageState.loading));
-    var result = await TaskRepository.getTasksWStatusByTopicId(event.topicNumber);
+    List<TaskWStatus>? result;
+    if(event.topicNumber == 0){
+      result = await TaskRepository.getTasksWStatus();
+    } else{
+      result = await TaskRepository.getTasksWStatusByTopicId(event.topicNumber);
+    }
     var resultTopics = await TaskRepository.getAllTopics();
     var resultStats = await TaskRepository.getStats();
     if (result != null && resultTopics != null && resultStats != null) {
