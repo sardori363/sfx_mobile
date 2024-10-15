@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Center(
                                   child: Text(
-                                    state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId].name,
+                                    BlocProvider.of<HomeBloc>(context).currentTopicId == 0 ? state.topicsData[index].name : state.topicsData[BlocProvider.of<HomeBloc>(context).currentTopicId-1].name,
                                     style: Theme.of(context).textTheme.labelLarge?.copyWith(color: contextColor.onPrimary, fontSize: 16.sp),
                                   ),
                                 ),

@@ -16,18 +16,19 @@ class SuccessPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: contextColor.background,
       body: Container(
-        height: 510,
-        margin: EdgeInsets.only(top: 150.h, left: 40.w, right: 40.w, bottom: 150.h),
-        padding: const EdgeInsets.all(24),
+        height: 500.h,
+        margin: EdgeInsets.only(top: 150.h, left: 40.w, right: 40.w, bottom: 250.h),
+        padding: EdgeInsets.only(top: 0, right: 24.w, left: 24.w, bottom: 24.h),
         decoration: BoxDecoration(
           color: contextColor.onPrimaryContainer,
           borderRadius: BorderRadius.circular(30),
         ),
         child: Column(
           children: <Widget>[
-            SvgPicture.asset(Assets.iconsSuccessLarge),
-            const SizedBox(
-              height: 40,
+            SizedBox(
+              height: 300.h,
+              width: 300.w,
+              child: SvgPicture.asset(Assets.iconsSuccessLarge, fit: BoxFit.fill,),
             ),
             Text(
               "Uyga vazifa muvaffaqiyatli yuklandi.",
@@ -36,16 +37,14 @@ class SuccessPage extends StatelessWidget {
                   .titleMedium
                   ?.copyWith(color: contextColor.onPrimary, fontWeight: FontWeight.w700, fontSize: 18.sp),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const Spacer(),
             MaterialButton(
               elevation: 0,
-              height: 46.h,
+              height: 50.h,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
-              minWidth: 230,
+              minWidth: 230.w,
               color: AppColors.green,
               onPressed: () {
                 context.go(AppRouteName.homePage);

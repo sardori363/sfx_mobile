@@ -67,7 +67,7 @@ class CustomLanguagePickerWidget extends StatelessWidget {
         ),
         // const Spacer(),
         CustomNextButtonWidget(
-          text: "context.localized.choose",
+          text: "Tanlash",
           onPressed: () {
             Navigator.pop(context);
             context.read<LocaleCubit>().changeLocale(

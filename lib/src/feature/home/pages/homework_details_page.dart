@@ -115,7 +115,7 @@ class _HomeWorkDetailsPageState extends State<HomeWorkDetailsPage> {
                   Stack(
                     children: [
                       SizedBox(
-                        height: 214,
+                        height: 214.h,
                         width: double.infinity,
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
