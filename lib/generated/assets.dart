@@ -22,6 +22,7 @@ class Assets {
   static const String iconsTestDefault = 'assets/icons/testDefault.svg';
   static const String iconsTestFilled = 'assets/icons/testFilled.svg';
   static const String imagesActualLogo = 'assets/images/actual_logo.png';
+  static const String imagesError = 'assets/images/error.png';
   static const String imagesFlagRus = 'assets/images/flag_rus.png';
   static const String imagesFlagUzb = 'assets/images/flag_uzb.png';
   static const String imagesLogo = 'assets/images/logo.png';

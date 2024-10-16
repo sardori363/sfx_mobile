@@ -16,20 +16,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _getTasks(GetTasksEvent event, Emitter<HomeState> emit) async {
     emit(state.copyWith(pageState: HomePageState.loading));
-    List<TaskWStatus>? result;
-    if(event.topicNumber == 0){
-      result = await TaskRepository.getTasksWStatus();
-    } else{
-      result = await TaskRepository.getTasksWStatusByTopicId(event.topicNumber);
-    }
-    var resultTopics = await TaskRepository.getAllTopics();
-    var resultStats = await TaskRepository.getStats();
-    if (result != null && resultTopics != null && resultStats != null) {
-      emit(
-        state.copyWith(pageState: HomePageState.success, tasksData: result, topicsData: resultTopics, stats: resultStats),
-      );
-    } else {
-      log("home bloc get arenas error");
+    try{
+      List<TaskWStatus>? result;
+      if(event.topicNumber == 0){
+        result = await TaskRepository.getTasksWStatus();
+      } else{
+        result = await TaskRepository.getTasksWStatusByTopicId(event.topicNumber);
+      }
+      var resultTopics = await TaskRepository.getAllTopics();
+      var resultStats = await TaskRepository.getStats();
+      if (result != null && resultTopics != null && resultStats != null) {
+        emit(
+          state.copyWith(pageState: HomePageState.success, tasksData: result, topicsData: resultTopics, stats: resultStats),
+        );
+      } else {
+        log("home bloc get arenas error");
+        emit(state.copyWith(pageState: HomePageState.error));
+      }
+    }catch(e){
       emit(state.copyWith(pageState: HomePageState.error));
     }
   }
